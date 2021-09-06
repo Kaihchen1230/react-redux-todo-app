@@ -5,18 +5,33 @@ import { getTodosAsync } from '../redux/todoSlice';
 
 const TodoList = () => {
 	const dispatch = useDispatch();
-	const todos = useSelector((state) => state.todos);
+	const todoList = useSelector((state) => state.todos.todoList);
+	const todoListStatus = useSelector((state) => state.todos.todoListStatus);
+	const statusMessage = useSelector((state) => state.todos.statusMessage);
 
 	useEffect(() => {
 		dispatch(getTodosAsync());
 	}, [dispatch]);
 
 	return (
-		<ul className='list-group'>
-			{todos.map((todo) => (
-				<TodoItem id={todo.id} title={todo.title} completed={todo.completed} />
-			))}
-		</ul>
+		<div>
+			{todoListStatus === true ? (
+				<h2>LOADING ......</h2>
+			) : (
+				<ul className='list-group'>
+					{todoList.map((todo) => (
+						<TodoItem
+							key={todo.id}
+							id={todo.id}
+							title={todo.title}
+							completed={todo.completed}
+							message={todo.hasOwnProperty('message') ? todo.message : ''}
+						/>
+					))}
+				</ul>
+			)}
+			<h2 style={{ color: 'red' }}>{statusMessage}</h2>
+		</div>
 	);
 };
 
